@@ -102,3 +102,47 @@ function buildList(templates) {
   });
   return fragment;
 }
+
+/**
+ * テンプレート配列をストレージに保存する関数 (Promise版)
+ * なぜ: 操作を async/await で扱えるようにするため
+ * @param {Array<{title:string,prompt:string}>} templates
+ * @returns {Promise<void>}
+ */
+async function setTemplates(templates) {
+  return new Promise((resolve, reject) => {
+    chrome.storage.local.set({ [STORAGE_KEY]: templates }, () => {
+      if (chrome.runtime.lastError) {
+        console.error('テンプレート保存失敗:', chrome.runtime.lastError);
+        reject(chrome.runtime.lastError);
+      } else {
+        resolve();
+      }
+    });
+  });
+}
+
+/**
+ * 新規テンプレートを追加する関数
+ * @param {{title:string,prompt:string}} template
+ */
+async function addTemplate(template) {
+  const templates = await fetchTemplates();
+  templates.push(template);
+  await setTemplates(templates);
+}
+
+/**
+ * 既存テンプレートを更新する関数
+ * @param {number} index
+ * @param {{title:string,prompt:string}} template
+ */
+async function updateTemplate(index, template) {
+  const templates = await fetchTemplates();
+  if (index >= 0 && index < templates.length) {
+    templates[index] = template;
+    await setTemplates(templates);
+  } else {
+    throw new Error('Invalid index for update: ' + index);
+  }
+}

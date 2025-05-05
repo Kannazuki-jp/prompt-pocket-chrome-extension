@@ -72,58 +72,35 @@ function resetForm() {
 /**
  * テンプレート追加フォームの初期化とイベントリスナー設定
  */
-function initializeAddForm() {
+async function initializeAddForm() {
   if (!addFormElement || !titleInputElement || !promptInputElement || !submitButton) {
-    console.error('Add form elements not found.');
+    console.error('フォーム要素が見つかりません');
     return;
   }
 
-  addFormElement.addEventListener('submit', (event) => {
-    event.preventDefault(); // デフォルトのフォーム送信をキャンセル
-
+  addFormElement.addEventListener('submit', async (event) => {
+    event.preventDefault();
     const title = titleInputElement.value.trim();
     const prompt = promptInputElement.value.trim();
-
-    // 入力チェック
     if (!title || !prompt) {
       alert('タイトルとプロンプトの両方を入力してください。');
       return;
     }
-
     const newTemplate = { title, prompt };
-
-    // ストレージから現在のテンプレートリストを取得
-    chrome.storage.local.get({ [STORAGE_KEY]: [] }, (result) => {
-      let currentTemplates = result[STORAGE_KEY];
-
+    try {
       if (editingIndex !== null) {
-        // --- 更新処理 ---
         console.log(`Updating template at index: ${editingIndex}`);
-        if (editingIndex >= 0 && editingIndex < currentTemplates.length) {
-          currentTemplates[editingIndex] = newTemplate; // 該当インデックスの要素を置き換え
-          saveTemplates(currentTemplates, (error) => {
-            if (!error) {
-              resetForm(); // フォームをリセット
-              renderTemplates(); // リストを再描画
-            }
-          });
-        } else {
-          console.error("Invalid index for update:", editingIndex);
-          alert('テンプレートの更新中にエラーが発生しました。');
-          resetForm(); // エラーでもフォームはリセット
-        }
+        await updateTemplate(editingIndex, newTemplate);
       } else {
-        // --- 追加処理 (従来通り) ---
         console.log('Adding new template');
-        currentTemplates.push(newTemplate);
-        saveTemplates(currentTemplates, (error) => {
-          if (!error) {
-            resetForm(); // フォームをリセット
-            renderTemplates(); // リストを再描画
-          }
-        });
+        await addTemplate(newTemplate);
       }
-    });
+      resetForm();
+      renderTemplates();
+    } catch (error) {
+      console.error('テンプレート保存エラー:', error);
+      alert('テンプレートの保存中にエラーが発生しました。');
+    }
   });
 
   console.log('Add form initialized.');
