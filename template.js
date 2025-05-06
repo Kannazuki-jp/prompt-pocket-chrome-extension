@@ -36,16 +36,28 @@ export function createTemplateItem(template, index) {
   li.dataset.index = index;
   li.classList.add('template-item');
   
-  // 展開アイコン
+  // 展開アイコン - アコーディオン機能のためのUI要素
   const expandIcon = document.createElement('span');
   expandIcon.classList.add('expand-icon');
   expandIcon.textContent = '▶';
   li.appendChild(expandIcon);
+  
+  // タイトル表示要素 - テキストオーバーフロー対策とスタイリングのため分離
+  const titleEl = document.createElement('div');
+  titleEl.classList.add('template-title');
+  titleEl.textContent = template.title;
+  li.appendChild(titleEl);
 
+  // ボタンコンテナ作成 - ボタンのグループ化
+  const buttonContainer = document.createElement('div');
+  buttonContainer.classList.add('template-buttons');
+  li.appendChild(buttonContainer);
+  
   // 挿入ボタン
   const templateButton = document.createElement('button');
-  templateButton.textContent = template.title || `テンプレート ${index + 1}`;
-  templateButton.dataset.prompt = template.prompt;
+  templateButton.innerHTML = '<span>挿入</span>';
+  templateButton.classList.add('template-insert', 'btn');
+  templateButton.title = 'テンプレートを挿入';
   templateButton.addEventListener('click', (e) => {
     e.stopPropagation();
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -63,24 +75,26 @@ export function createTemplateItem(template, index) {
       }
     });
   });
-  li.appendChild(templateButton);
+  buttonContainer.appendChild(templateButton);
 
-  // 編集ボタン
+  // 編集ボタン - 適切なアイコンで表現
   const editButton = document.createElement('button');
-  editButton.textContent = '編集';
-  editButton.classList.add('edit-button');
-  editButton.addEventListener('click', (e) => {
-    e.stopPropagation();
+  editButton.innerHTML = '✏️';
+  editButton.classList.add('template-edit', 'btn', 'icon-btn');
+  editButton.title = '編集';
+  editButton.addEventListener('click', (event) => {
+    event.stopPropagation();
     window.startEditing(index);
   });
-  li.appendChild(editButton);
+  buttonContainer.appendChild(editButton);
 
-  // 削除ボタン
+  // 削除ボタン - ゴミ箱アイコンで直感性向上
   const deleteButton = document.createElement('button');
-  deleteButton.textContent = '削除';
-  deleteButton.classList.add('delete-button');
-  deleteButton.addEventListener('click', (e) => {
-    e.stopPropagation();
+  deleteButton.innerHTML = '✖';
+  deleteButton.classList.add('template-delete', 'btn', 'icon-btn');
+  deleteButton.title = '削除';
+  deleteButton.addEventListener('click', (event) => {
+    event.stopPropagation();
     chrome.storage.local.get({ [STORAGE_KEY]: [] }, (result) => {
       const items = result[STORAGE_KEY];
       items.splice(index, 1);
@@ -97,7 +111,7 @@ export function createTemplateItem(template, index) {
       });
     });
   });
-  li.appendChild(deleteButton);
+  buttonContainer.appendChild(deleteButton);
 
   return li;
 }
