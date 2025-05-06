@@ -1,0 +1,143 @@
+/* Template List Styles */
+#template-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 24px; /* More space */
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Gap between items */
+}
+
+#template-list li {
+  background-color: var(--card-bg-color);
+  border: 1px solid var(--border-color);
+  padding: 16px 18px;
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px; /* Gap between buttons */
+  box-shadow: var(--card-shadow); 
+  transition: all var(--transition-speed) ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+#template-list li:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-1px);
+  border-color: rgba(var(--primary-color), 0.3);
+}
+
+/* 選択中のアイテム */
+#template-list li.selected {
+  background-color: rgba(var(--primary-color), 0.08);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 1px rgba(var(--primary-color), 0.2);
+}
+
+/* テンプレートタイトル表示領域 */
+#template-list li .template-title {
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+}
+
+/* ボタングループのコンテナ */
+.template-buttons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto; /* 右寄せ */
+}
+
+/* Action Buttons Container (Optional, helps grouping) */
+.action-buttons {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0; /* Prevent buttons from shrinking */
+}
+
+/* プレビューパネル */
+.template-preview {
+  display: none;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  margin-left: 25px; /* インデント */
+  padding: 16px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  background-color: var(--card-bg-color);
+  background-image: linear-gradient(to bottom, rgba(var(--primary-color), 0.02), rgba(var(--primary-color), 0));
+  max-height: 250px;
+  overflow-y: auto;
+  transition: all 0.3s ease;
+  position: relative;
+  box-shadow: var(--card-shadow);
+}
+
+.template-preview.open {
+  display: block;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.template-preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-color);
+  font-weight: bold;
+}
+
+.template-preview-close {
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--subtle-text-color);
+}
+
+.template-preview-close:hover {
+  color: var(--delete-color);
+}
+
+/* 展開アイコン */
+.expand-icon {
+  margin-right: 12px;
+  color: var(--subtle-text-color);
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform 0.2s, color 0.2s;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: rgba(var(--primary-color), 0);
+}
+
+.expand-icon:hover {
+  background-color: rgba(var(--primary-color), 0.1);
+  color: var(--primary-color);
+}
+
+li .expand-icon.open {
+  transform: rotate(90deg);
+  color: var(--primary-color);
+  background-color: rgba(var(--primary-color), 0.15);
+}

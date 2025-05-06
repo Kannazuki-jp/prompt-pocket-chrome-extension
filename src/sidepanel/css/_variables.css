@@ -1,0 +1,44 @@
+:root {
+  /* Modern Color Palette */
+  --bg-color: #f9fafb;       /* Light Gray */
+  --card-bg-color: #ffffff;  /* White */
+  --text-color: #1f2937;     /* Dark Gray */
+  --subtle-text-color: #6b7280; /* Medium Gray */
+  --border-color: #e5e7eb;    /* Light Gray Border */
+  --primary-color: #4f46e5;   /* Indigo */
+  --primary-hover-color: #4338ca; /* Darker Indigo */
+  --edit-color: #f59e0b;     /* Amber */
+  --edit-hover-color: #d97706; /* Darker Amber */
+  --delete-color: #ef4444;   /* Red */
+  --delete-hover-color: #dc2626; /* Darker Red */
+  --button-text-light: #ffffff;
+  --button-text-dark: #1f2937;
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1);
+  --card-shadow-hover: 0 4px 6px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.1);
+  --border-radius: 8px;
+  --transition-speed: 0.2s;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Dark Mode Color Palette */
+    --bg-color: #111827;       /* Very Dark Gray/Blue */
+    --card-bg-color: #1f2937;  /* Dark Gray/Blue */
+    --text-color: #f9fafb;     /* Light Gray (Almost White) */
+    --subtle-text-color: #9ca3af; /* Medium Gray */
+    --border-color: #374151;    /* Gray */
+    --primary-color: #6366f1;   /* Lighter Indigo for contrast */
+    --primary-hover-color: #4f46e5; /* Original Indigo */
+    --edit-color: #facc15;     /* Lighter Amber */
+    --edit-hover-color: #f59e0b; /* Original Amber */
+    --delete-color: #f87171;   /* Lighter Red */
+    --delete-hover-color: #ef4444; /* Original Red */
+  }
+
+  /* Ensure high contrast for specific elements if needed */
+  #add-template-form input[type="text"]:focus,
+  #add-template-form textarea:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(var(--primary-color), 0.3); /* Adjusted focus ring color */
+  }
+}

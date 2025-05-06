@@ -56,7 +56,7 @@ export function createTemplateItem(template, index) {
   // 挿入ボタン
   const templateButton = document.createElement('button');
   templateButton.innerHTML = '<span>挿入</span>';
-  templateButton.classList.add('template-insert', 'btn');
+  templateButton.classList.add('btn', 'btn--primary', 'btn--insert');
   templateButton.title = 'テンプレートを挿入';
   templateButton.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -80,7 +80,7 @@ export function createTemplateItem(template, index) {
   // 編集ボタン - 適切なアイコンで表現
   const editButton = document.createElement('button');
   editButton.innerHTML = '✏️';
-  editButton.classList.add('template-edit', 'btn', 'icon-btn');
+  editButton.classList.add('btn', 'btn--icon', 'btn--edit');
   editButton.title = '編集';
   editButton.addEventListener('click', (event) => {
     event.stopPropagation();
@@ -91,7 +91,7 @@ export function createTemplateItem(template, index) {
   // 削除ボタン - ゴミ箱アイコンで直感性向上
   const deleteButton = document.createElement('button');
   deleteButton.innerHTML = '✖';
-  deleteButton.classList.add('template-delete', 'btn', 'icon-btn');
+  deleteButton.classList.add('btn', 'btn--icon', 'btn--delete');
   deleteButton.title = '削除';
   deleteButton.addEventListener('click', (event) => {
     event.stopPropagation();

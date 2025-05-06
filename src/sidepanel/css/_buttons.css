@@ -1,0 +1,136 @@
+/* === Button Styles === */
+.btn {
+  /* 基本的なボタンスタイル */
+  display: inline-flex; /* アイコンとテキストの整列のため */
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px; /* デフォルトのパディング */
+  border: 1px solid transparent; /* 透明なボーダーを基本とする */
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  text-decoration: none; /* aタグ利用時の下線除去 */
+  cursor: pointer;
+  transition: all var(--transition-speed) ease;
+  position: relative; /* 波紋エフェクトやツールチップのため */
+  overflow: hidden; /* 波紋エフェクトのため */
+  white-space: nowrap; /* ボタン内テキストの折り返しを防ぐ */
+}
+
+/* 波紋エフェクト (オプション) */
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  /* 波紋の色はボタンの種類によって変えたい場合、CSS変数を使うか、修飾子で上書き */
+  background-color: rgba(255, 255, 255, 0.2); /* Lightモードでの汎用的な色 */
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.4s ease, height 0.4s ease;
+  z-index: 0;
+}
+
+.btn:hover::before {
+  width: 150%; /* 波紋の広がり具合 */
+  height: 150%;
+}
+
+/* ボタン内のコンテンツが波紋より手前に来るように */
+.btn > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* --- Button Modifiers --- */
+.btn--primary {
+  background-color: var(--primary-color);
+  color: var(--button-text-light);
+  border-color: var(--primary-color);
+}
+
+.btn--primary:hover {
+  background-color: var(--primary-hover-color);
+  border-color: var(--primary-hover-color);
+  transform: translateY(-1px); /* ホバー時の軽い浮き上がり */
+  box-shadow: 0 2px 4px rgba(var(--primary-color), 0.2);
+}
+
+.btn--primary:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.btn--icon {
+  padding: 6px; /* アイコンボタン用のパディング */
+  width: 32px;  /* アイコンサイズに合わせて調整 */
+  height: 32px;
+  border-radius: 50%; /* 円形にする場合 */
+  background-color: transparent;
+  color: var(--subtle-text-color);
+}
+
+.btn--icon:hover {
+  background-color: rgba(var(--primary-color), 0.1); /* ホバー時の背景色 */
+  color: var(--primary-color);
+}
+
+.btn--text {
+  background-color: transparent;
+  color: var(--text-color);
+  padding: 6px 0; /* テキストボタン用のパディング調整 */
+  font-weight: 600;
+  border-color: transparent;
+}
+
+.btn--text:hover {
+  color: var(--primary-color);
+  opacity: 0.8;
+  background-color: transparent;
+}
+
+.btn--edit {
+  /* .btn--icon と組み合わせて使用 */
+  color: var(--edit-color);
+}
+.btn--edit:hover {
+  background-color: rgba(var(--edit-color), 0.1);
+  color: var(--edit-hover-color);
+  transform: translateY(-1px);
+}
+.btn--edit:active {
+  transform: translateY(0);
+}
+
+.btn--delete {
+  /* .btn--icon と組み合わせて使用 */
+  color: var(--delete-color);
+}
+.btn--delete:hover {
+  background-color: rgba(var(--delete-color), 0.1);
+  color: var(--delete-hover-color);
+  transform: translateY(-1px);
+}
+.btn--delete:active {
+  transform: translateY(0);
+}
+
+.btn--insert {
+  /* 通常 .btn--primary と併用されるか、独自のスタイルを持つ */
+  /* ここでは .btn--primary をベースとし、矢印アイコンを追加する想定 */
+  /* もし .btn--primary と異なるベーススタイルが必要なら別途定義 */
+}
+
+.btn--insert::after {
+  content: '→'; /* FontAwesomeなどのアイコンフォント利用も検討 */
+  font-size: inherit; /* ボタンのフォントサイズに合わせる */
+  margin-left: 6px; /* テキストとアイコンの間隔 */
+  transition: transform 0.2s ease;
+}
+
+.btn--insert:hover::after {
+  transform: translateX(2px);
+}
