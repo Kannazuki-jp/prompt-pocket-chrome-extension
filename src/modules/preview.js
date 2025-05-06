@@ -19,7 +19,7 @@ export function renderPreview(li, template) {
   // ヘッダー要素を作成
   const headerEl = document.createElement('div');
   headerEl.classList.add('template-preview-header');
-  headerEl.textContent = 'プレビュー';
+  headerEl.textContent = 'Preview';
 
   // 閉じるボタン
   const closeButton = document.createElement('span');

@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Prompt Panel for ChatGPT & Gemini",
+  "name": "Prompt Pocket",
   "version": "1.0.0",
-  "description": "サイドパネルでプロンプトテンプレートを保存・管理し、ChatGPTやGeminiにワンクリックで入力できるChrome拡張機能です。",
+  "description": "Save and manage prompt templates in a sidebar panel, and insert them into ChatGPT or Gemini with a single click.",
   "permissions": ["storage", "sidePanel", "scripting", "activeTab", "tabs"],
   "host_permissions": [
     "https://chatgpt.com/*",
@@ -22,6 +22,6 @@
     }
   ],
   "action": {
-    "default_title": "Prompt Panel"
+    "default_title": "Prompt Pocket"
   }
 }

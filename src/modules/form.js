@@ -55,7 +55,7 @@ export async function startEditing(index, titleInput, promptInput, submitButton)
       const templateToEdit = templates[index];
       titleInput.value = templateToEdit.title;
       promptInput.value = templateToEdit.prompt;
-      submitButton.textContent = '更新';
+      submitButton.textContent = 'Update';
     } else {
       console.error('編集対象のテンプレートが見つかりません。index:', index);
       alert('編集対象のテンプレートの読み込みに失敗しました。');
@@ -74,5 +74,5 @@ export async function startEditing(index, titleInput, promptInput, submitButton)
  */
 export function resetForm(form, submitButton) {
   form.reset();
-  submitButton.textContent = '保存';
+  submitButton.textContent = 'Save';
 }
