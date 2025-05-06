@@ -1,10 +1,16 @@
+// template.js
+// テンプレート関連の機能をまとめたモジュール
+
+// テンプレート保存用のキー
+export const STORAGE_KEY = 'promptTemplates';
+
 /**
  * chrome.storage.local.get のコールバックを Promise 化し、
  * テンプレート配列を非同期に取得するための関数。
  * なぜ: コールバックのネストを避け、async/await で扱いやすくするため。
  * @returns {Promise<Array<{title: string, prompt: string}>>}
  */
-async function fetchTemplates() {
+export async function fetchTemplates() {
   return new Promise((resolve, reject) => {
     chrome.storage.local.get([STORAGE_KEY], (result) => {
       if (chrome.runtime.lastError) {
@@ -25,7 +31,7 @@ async function fetchTemplates() {
  * @param {number} index
  * @returns {HTMLLIElement}
  */
-function createTemplateItem(template, index) {
+export function createTemplateItem(template, index) {
   const li = document.createElement('li');
   li.dataset.index = index;
 
@@ -55,7 +61,7 @@ function createTemplateItem(template, index) {
   const editButton = document.createElement('button');
   editButton.textContent = '編集';
   editButton.classList.add('edit-button');
-  editButton.addEventListener('click', () => startEditing(index));
+  editButton.addEventListener('click', () => window.startEditing(index));
   li.appendChild(editButton);
 
   // 削除ボタン
@@ -71,7 +77,10 @@ function createTemplateItem(template, index) {
           console.error('テンプレート削除失敗:', chrome.runtime.lastError);
           alert('テンプレートの削除中にエラーが発生しました。');
         } else {
-          renderTemplates();
+          // グローバル経由でレンダリング関数を呼び出し
+          if (typeof window.renderTemplates === 'function') {
+            window.renderTemplates();
+          }
         }
       });
     });
@@ -89,7 +98,7 @@ function createTemplateItem(template, index) {
  * @param {Array<{title: string, prompt: string}>} templates
  * @returns {DocumentFragment}
  */
-function buildList(templates) {
+export function buildList(templates) {
   const fragment = document.createDocumentFragment();
   if (templates.length === 0) {
     const message = document.createElement('div');
@@ -109,7 +118,7 @@ function buildList(templates) {
  * @param {Array<{title:string,prompt:string}>} templates
  * @returns {Promise<void>}
  */
-async function setTemplates(templates) {
+export async function setTemplates(templates) {
   return new Promise((resolve, reject) => {
     chrome.storage.local.set({ [STORAGE_KEY]: templates }, () => {
       if (chrome.runtime.lastError) {
@@ -126,7 +135,7 @@ async function setTemplates(templates) {
  * 新規テンプレートを追加する関数
  * @param {{title:string,prompt:string}} template
  */
-async function addTemplate(template) {
+export async function addTemplate(template) {
   const templates = await fetchTemplates();
   templates.push(template);
   await setTemplates(templates);
@@ -137,7 +146,7 @@ async function addTemplate(template) {
  * @param {number} index
  * @param {{title:string,prompt:string}} template
  */
-async function updateTemplate(index, template) {
+export async function updateTemplate(index, template) {
   const templates = await fetchTemplates();
   if (index >= 0 && index < templates.length) {
     templates[index] = template;

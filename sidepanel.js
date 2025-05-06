@@ -1,199 +1,63 @@
-// sidepanel.js (リセット版)
-// 定数定義
-const STORAGE_KEY = 'promptTemplates';
+import { initDOM } from './dom.js';
+import { fetchTemplates, buildList } from './template.js';
+import { handleAdd, startEditing as formStartEditing, resetForm as formReset } from './form.js';
+import { notify } from './utils.js';
+
+// DOMのセレクタ定義
 const SELECTORS = {
-  list: 'template-list', // # を外してID名のみにします
+  list: 'template-list',
   form: 'add-template-form',
   titleInput: 'template-title',
   promptInput: 'template-prompt'
 };
-console.log('sidepanel.js execution started.'); // 実行開始ログ
 
-// DOM要素
-let templateListElement, addFormElement, titleInputElement, promptInputElement, submitButton;
-
-// DOM要素取得をデバッグする関数
-function debugElement(id) {
-  console.log(`Checking element with ID: ${id}`);
-  const el = document.getElementById(id);
-  console.log(`Element found: ${el !== null}`);
-  return el;
-}
-
-let editingIndex = null; // 現在編集中のテンプレートのインデックス (-1 や null で未編集状態を示す)
+// DOM要素を格納するオブジェクト
+let domElements;
 
 /**
- * ストレージからテンプレートを読み込み、HTMLリストとして描画する関数
+ * テンプレート描画関数
  */
 async function renderTemplates() {
-  // 要素の存在確認
-  if (!templateListElement) {
-    console.error('テンプレートリスト要素が見つかりません');
-    return;
-  }
   try {
+    const { templateListElement } = domElements;
     const templates = await fetchTemplates();
     const fragment = buildList(templates);
     templateListElement.innerHTML = '';
     templateListElement.appendChild(fragment);
   } catch (error) {
-    console.error('renderTemplates エラー:', error);
-    templateListElement.textContent = 'テンプレートの読み込み中にエラーが発生しました。';
+    notify('テンプレート読み込み中にエラーが発生しました。', 'error');
   }
 }
 
 /**
- * テンプレートリストをストレージに保存する共通関数
- * @param {Array<Object>} templates - 保存するテンプレートの配列
- * @param {Function} callback - 保存完了後に実行されるコールバック関数
+ * 初期化処理
  */
-function saveTemplates(templates, callback) {
-  chrome.storage.local.set({ [STORAGE_KEY]: templates }, () => {
-    if (chrome.runtime.lastError) {
-      console.error('Error saving templates:', chrome.runtime.lastError);
-      alert('テンプレートの保存中にエラーが発生しました。');
-      if (callback) callback(chrome.runtime.lastError);
-    } else {
-      console.log('Templates saved successfully.');
-      if (callback) callback(null);
-    }
-  });
-}
-
-/**
- * フォームの状態をリセットする関数
- */
-function resetForm() {
-  addFormElement.reset(); // フォームの入力内容をクリア
-  editingIndex = null; // 編集状態を解除
-  submitButton.textContent = '保存'; // ボタンのテキストを元に戻す
-}
-
-/**
- * テンプレート追加フォームの初期化とイベントリスナー設定
- */
-async function initializeAddForm() {
-  if (!addFormElement || !titleInputElement || !promptInputElement || !submitButton) {
-    console.error('フォーム要素が見つかりません');
-    return;
-  }
-
-  addFormElement.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const title = titleInputElement.value.trim();
-    const prompt = promptInputElement.value.trim();
-    if (!title || !prompt) {
-      alert('タイトルとプロンプトの両方を入力してください。');
-      return;
-    }
-    const newTemplate = { title, prompt };
-    try {
-      if (editingIndex !== null) {
-        console.log(`Updating template at index: ${editingIndex}`);
-        await updateTemplate(editingIndex, newTemplate);
-      } else {
-        console.log('Adding new template');
-        await addTemplate(newTemplate);
-      }
-      resetForm();
-      renderTemplates();
-    } catch (error) {
-      console.error('テンプレート保存エラー:', error);
-      alert('テンプレートの保存中にエラーが発生しました。');
-    }
-  });
-
-  console.log('Add form initialized.');
-}
-
-/**
- * 指定されたインデックスのテンプレート編集を開始する関数
- * @param {number} index - 編集するテンプレートのインデックス
- */
-function startEditing(index) {
-  console.log(`Starting edit for index: ${index}`);
-  chrome.storage.local.get({ [STORAGE_KEY]: [] }, (result) => {
-    const templates = result[STORAGE_KEY];
-    if (index >= 0 && index < templates.length) {
-      const templateToEdit = templates[index];
-      titleInputElement.value = templateToEdit.title;
-      promptInputElement.value = templateToEdit.prompt;
-      editingIndex = index; // 編集中のインデックスを設定
-      submitButton.textContent = '更新'; // ボタンのテキストを変更
-      titleInputElement.focus(); // タイトル入力欄にフォーカス
-    } else {
-      console.error('Invalid index for editing:', index);
-      alert('編集対象のテンプレートが見つかりませんでした。');
-    }
-  });
-}
-
-// 初期化処理を実行
-// 注意: Chrome拡張機能の設定によってはイベントが発火しない場合があるので、即時関数も追加
-function initSidePanel() {
-  console.log('initSidePanelを開始...');
+document.addEventListener('DOMContentLoaded', () => {
+  // 他のモジュールからアクセスできるようグローバルに関数を公開
+  window.renderTemplates = renderTemplates;
   try {
-    console.log('DOM要素をチェック中...');
-    const allElements = document.querySelectorAll('*');
-    console.log(`ページ上の要素数: ${allElements.length}`);
-    
-    // 名前付きのHTML要素を確認してログ出力
-    console.log('IDを持つ要素:');
-    for (const el of document.querySelectorAll('[id]')) {
-      console.log(`- ID: ${el.id}`);
-    }
-    
-    // DOM要素を直接取得
-    templateListElement = debugElement(SELECTORS.list);
-    if (!templateListElement) {
-      console.error(`要素が見つかりません: #${SELECTORS.list}`);
-      return; // 中断するが例外は投げない
-    }
-    
-    addFormElement = debugElement(SELECTORS.form);
-    if (!addFormElement) {
-      console.error(`要素が見つかりません: #${SELECTORS.form}`);
-      return;
-    }
-    
-    titleInputElement = debugElement(SELECTORS.titleInput);
-    if (!titleInputElement) {
-      console.error(`要素が見つかりません: #${SELECTORS.titleInput}`);
-      return;
-    }
-    
-    promptInputElement = debugElement(SELECTORS.promptInput);
-    if (!promptInputElement) {
-      console.error(`要素が見つかりません: #${SELECTORS.promptInput}`);
-      return;
-    }
-    
-    submitButton = addFormElement.querySelector('button[type="submit"]');
-    if (!submitButton) {
-      console.error('Submit button not found in form');
-      return;
-    }
-    
-    // スクリプト読み込み時にテンプレートを描画
+    // DOM要素を取得
+    domElements = initDOM(SELECTORS);
+    // 編集処理をグローバルに設定
+    window.startEditing = (index) =>
+      formStartEditing(
+        index,
+        domElements.titleInputElement,
+        domElements.promptInputElement,
+        domElements.submitButton
+      );
+    // フォームの追加・更新処理
+    handleAdd(
+      domElements.addFormElement,
+      domElements.titleInputElement,
+      domElements.promptInputElement,
+      domElements.submitButton,
+      renderTemplates,
+      () => formReset(domElements.addFormElement, domElements.submitButton)
+    );
+    // 初回テンプレート描画
     renderTemplates();
-    
-    // テンプレート追加フォームを初期化
-    initializeAddForm();
-    
-    console.log('サイドパネル初期化完了');
   } catch (error) {
-    console.error('初期化エラー:', error.message);
+    notify(`初期化エラー: ${error.message}`, 'error');
   }
-}
-
-// DOMContentLoadedイベントで初期化を実行
-document.addEventListener('DOMContentLoaded', initSidePanel);
-
-// バックアップとして、即時関数で一定時間後にも初期化を試みる
-setTimeout(() => {
-  console.log('延微初期化チェック...');
-  if (!templateListElement) {
-    console.log('DOMContentLoadedが発火しなかったか、要素の存在チェックに失敗したため、手動で初期化します');
-    initSidePanel();
-  }
-}, 500);
+});
