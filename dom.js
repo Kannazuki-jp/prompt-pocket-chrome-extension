@@ -47,3 +47,13 @@ export function initDOM(selectors) {
 
   return { templateListElement, addFormElement, titleInputElement, promptInputElement, submitButton };
 }
+
+/**
+ * プレビューコンテナ要素を取得する
+ * @returns {HTMLElement}
+ */
+export function getPreviewContainer() {
+  const el = document.getElementById('template-preview');
+  if (!el) throw new Error('プレビューコンテナが見つかりません: #template-preview');
+  return el;
+}

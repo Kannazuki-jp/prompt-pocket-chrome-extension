@@ -1,5 +1,6 @@
 import { initDOM } from './dom.js';
 import { fetchTemplates, buildList } from './template.js';
+import { renderPreview } from './preview.js';
 import { handleAdd, startEditing as formStartEditing, resetForm as formReset } from './form.js';
 import { notify } from './utils.js';
 
@@ -38,6 +39,32 @@ document.addEventListener('DOMContentLoaded', () => {
   try {
     // DOM要素を取得
     domElements = initDOM(SELECTORS);
+    // 展開アイコン (▶/▼) をクリックしてプレビューをトグル表示
+    domElements.templateListElement.addEventListener('click', async (e) => {
+      const li = e.target.closest('li');
+      if (!li) return;
+      // アイコン以外のクリックは無視
+      if (!e.target.classList.contains('expand-icon')) return;
+      const icon = e.target;
+      const index = Number(li.dataset.index);
+      const templates = await fetchTemplates();
+      // 既存プレビューがあるかチェック
+      const next = li.nextElementSibling;
+      const isOpen = next && next.classList.contains('template-preview');
+      // 他の開いているプレビューを閉じる
+      document.querySelectorAll('.template-preview').forEach(p => p.remove());
+      domElements.templateListElement.querySelectorAll('li').forEach(item => {
+        item.classList.remove('selected');
+        const exp = item.querySelector('.expand-icon');
+        if (exp) exp.classList.remove('open');
+      });
+      if (!isOpen) {
+        // プレビューを表示
+        renderPreview(li, templates[index]);
+        li.classList.add('selected');
+        icon.classList.add('open');
+      }
+    });
     // 編集処理をグローバルに設定
     window.startEditing = (index) =>
       formStartEditing(

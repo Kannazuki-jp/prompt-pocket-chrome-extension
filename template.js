@@ -34,12 +34,20 @@ export async function fetchTemplates() {
 export function createTemplateItem(template, index) {
   const li = document.createElement('li');
   li.dataset.index = index;
+  li.classList.add('template-item');
+  
+  // 展開アイコン
+  const expandIcon = document.createElement('span');
+  expandIcon.classList.add('expand-icon');
+  expandIcon.textContent = '▶';
+  li.appendChild(expandIcon);
 
   // 挿入ボタン
   const templateButton = document.createElement('button');
   templateButton.textContent = template.title || `テンプレート ${index + 1}`;
   templateButton.dataset.prompt = template.prompt;
-  templateButton.addEventListener('click', () => {
+  templateButton.addEventListener('click', (e) => {
+    e.stopPropagation();
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const activeTab = tabs[0];
       if (activeTab && activeTab.id) {
@@ -61,14 +69,18 @@ export function createTemplateItem(template, index) {
   const editButton = document.createElement('button');
   editButton.textContent = '編集';
   editButton.classList.add('edit-button');
-  editButton.addEventListener('click', () => window.startEditing(index));
+  editButton.addEventListener('click', (e) => {
+    e.stopPropagation();
+    window.startEditing(index);
+  });
   li.appendChild(editButton);
 
   // 削除ボタン
   const deleteButton = document.createElement('button');
   deleteButton.textContent = '削除';
   deleteButton.classList.add('delete-button');
-  deleteButton.addEventListener('click', () => {
+  deleteButton.addEventListener('click', (e) => {
+    e.stopPropagation();
     chrome.storage.local.get({ [STORAGE_KEY]: [] }, (result) => {
       const items = result[STORAGE_KEY];
       items.splice(index, 1);
