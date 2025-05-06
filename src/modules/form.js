@@ -1,7 +1,7 @@
 // form.js
 // フォーム関連のロジックをまとめるモジュール
 
-import { addTemplate, updateTemplate } from './template.js';
+import { addTemplate, updateTemplate, fetchTemplates } from './template.js';
 
 let editingIndex = null;
 
@@ -47,12 +47,24 @@ export function handleAdd(form, titleInput, promptInput, submitButton, renderTem
  * @param {HTMLInputElement} promptInput
  * @param {HTMLButtonElement} submitButton
  */
-export function startEditing(index, titleInput, promptInput, submitButton) {
+export async function startEditing(index, titleInput, promptInput, submitButton) {
   editingIndex = index;
-  titleInput.value = document.querySelectorAll('li')[index].querySelector('button').textContent;
-  // プロンプトは dataset から取得
-  promptInput.value = document.querySelectorAll('li')[index].querySelector('button').dataset.prompt;
-  submitButton.textContent = '更新';
+  try {
+    const templates = await fetchTemplates();
+    if (templates && templates[index]) {
+      const templateToEdit = templates[index];
+      titleInput.value = templateToEdit.title;
+      promptInput.value = templateToEdit.prompt;
+      submitButton.textContent = '更新';
+    } else {
+      console.error('編集対象のテンプレートが見つかりません。index:', index);
+      alert('編集対象のテンプレートの読み込みに失敗しました。');
+      // エラー発生時はフォームをリセットするか、何らかのフォールバック処理を検討
+    }
+  } catch (error) {
+    console.error('編集中にエラーが発生しました:', error);
+    alert('テンプレートの読み込み中にエラーが発生しました。');
+  }
 }
 
 /**
