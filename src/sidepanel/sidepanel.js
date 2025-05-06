@@ -1,8 +1,8 @@
-import { initDOM } from './dom.js';
-import { fetchTemplates, buildList } from './template.js';
-import { renderPreview } from './preview.js';
-import { handleAdd, startEditing as formStartEditing, resetForm as formReset } from './form.js';
-import { notify } from './utils.js';
+import { initDOM } from '../modules/dom.js';
+import { fetchTemplates, buildList } from '../modules/template.js';
+import { renderPreview } from '../modules/preview.js';
+import { handleAdd, startEditing as formStartEditing, resetForm as formReset } from '../modules/form.js';
+import { notify } from '../modules/utils.js';
 
 // DOMのセレクタ定義
 const SELECTORS = {
