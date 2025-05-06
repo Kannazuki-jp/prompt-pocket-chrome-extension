@@ -35,13 +35,13 @@ export function createTemplateItem(template, index) {
   const li = document.createElement('li');
   li.dataset.index = index;
   li.classList.add('template-item');
-  
+
   // 展開アイコン - アコーディオン機能のためのUI要素
   const expandIcon = document.createElement('span');
   expandIcon.classList.add('expand-icon');
   expandIcon.textContent = '▶';
   li.appendChild(expandIcon);
-  
+
   // タイトル表示要素 - テキストオーバーフロー対策とスタイリングのため分離
   const titleEl = document.createElement('div');
   titleEl.classList.add('template-title');
@@ -52,7 +52,7 @@ export function createTemplateItem(template, index) {
   const buttonContainer = document.createElement('div');
   buttonContainer.classList.add('template-buttons');
   li.appendChild(buttonContainer);
-  
+
   // 挿入ボタン
   const templateButton = document.createElement('button');
   templateButton.innerHTML = '<span>Insert</span>';

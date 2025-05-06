@@ -21,18 +21,18 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Dark Mode Color Palette */
-    --bg-color: #111827;       /* Very Dark Gray/Blue */
-    --card-bg-color: #1f2937;  /* Dark Gray/Blue */
-    --text-color: #f9fafb;     /* Light Gray (Almost White) */
-    --subtle-text-color: #9ca3af; /* Medium Gray */
-    --border-color: #374151;    /* Gray */
-    --primary-color: #6366f1;   /* Lighter Indigo for contrast */
-    --primary-hover-color: #4f46e5; /* Original Indigo */
-    --edit-color: #facc15;     /* Lighter Amber */
-    --edit-hover-color: #f59e0b; /* Original Amber */
-    --delete-color: #f87171;   /* Lighter Red */
-    --delete-hover-color: #ef4444; /* Original Red */
+    /* Dark Mode Color Palette - Professional Theme */
+    --bg-color: #1a1a1a;       /* Background */
+    --card-bg-color: #2a2a2a;  /* Card Background */
+    --text-color: #f1f5f9;     /* Text */
+    --subtle-text-color: #94a3b8; /* Muted Text */
+    --border-color: #3f3a3f;    /* Secondary (Used as Border) */
+    --primary-color: #3b82f6;   /* Primary */
+    --primary-hover-color: #2563eb; /* Darker Primary for hover (Adjusted from original primary) */
+    --edit-color: #facc15;     /* Lighter Amber (Kept from previous) */
+    --edit-hover-color: #f59e0b; /* Original Amber (Kept from previous) */
+    --delete-color: #f87171;   /* Lighter Red (Kept from previous) */
+    --delete-hover-color: #ef4444; /* Original Red (Kept from previous) */
   }
 
   /* Ensure high contrast for specific elements if needed */

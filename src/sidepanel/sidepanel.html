@@ -4,18 +4,47 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Prompt Templates </title>
-  <link rel="stylesheet" href="sidepanel.css">
 </head>
 <body>
   <div id="app">
-    <h2>Prompt Templates</h2>
-    <form id="add-template-form">
-      <input type="text" id="template-title" placeholder="Title" required />
-      <textarea id="template-prompt" placeholder="Prompt Content" required></textarea>
-      <button type="submit" class="btn btn--primary">Save</button>
-    </form>
-    <hr />
-    <div id="template-list"></div>
+    <div id="tab-templates" class="tab-content active">
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="templates">テンプレート</button>
+        <button class="tab-btn" data-tab="settings">設定</button>
+      </div>
+      <link rel="stylesheet" href="sidepanel.css">
+      <form id="add-template-form">
+        <input type="text" id="template-title" placeholder="Title" required />
+        <textarea id="template-prompt" placeholder="Prompt Content" required></textarea>
+        <button type="submit" class="btn btn--primary">Save</button>
+      </form>
+      <hr />
+      <div id="template-list"></div>
+    </div>
+    <div id="tab-settings" class="tab-content">
+      <div class="tab-bar">
+        <button class="tab-btn" data-tab="templates">テンプレート</button>
+        <button class="tab-btn active" data-tab="settings">設定</button>
+      </div>
+      <h2>Settings</h2>
+      <form id="settings-form">
+        <div class="setting-group">
+          <label for="theme-select"><strong>Theme</strong></label>
+          <select id="theme-select" name="theme">
+            <option value="system">System</option>
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+          </select>
+        </div>
+        <div class="setting-group">
+          <label><strong>Language</strong></label>
+          <div class="lang-options">
+            <label><input type="radio" name="lang" value="en" checked /> English</label>
+            <label><input type="radio" name="lang" value="ja" /> 日本語</label>
+          </div>
+        </div>
+      </form>
+    </div>
   </div>
   <!-- ES6モジュールを読み込む -->
   <script type="module" src="sidepanel.js"></script>
