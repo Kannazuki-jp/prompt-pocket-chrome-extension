@@ -2,10 +2,10 @@
 #template-list {
   list-style: none;
   padding: 0;
-  margin-top: 24px; /* More space */
+  margin-top: 20px; /* フォームやhrとの区切り */
   display: flex;
   flex-direction: column;
-  gap: 10px; /* Gap between items */
+  gap: 12px; /* アイテム間のスペースを少し広げる */
 }
 
 #template-list li {
@@ -39,11 +39,22 @@
 
 /* テンプレートタイトル表示領域 */
 #template-list li .template-title {
-  font-weight: 500;
+  font-weight: 500; /* タイトルは少し太く */
+  color: var(--text-color);
+  margin-bottom: 4px;
+  font-size: var(--font-size-base);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 150px;
+}
+
+/* テンプレートコンテンツ表示領域 */
+#template-list li .template-content {
+  font-size: var(--font-size-sm);
+  color: var(--subtle-text-color);
+  white-space: pre-wrap; /* 改行とスペースを保持 */
+  word-break: break-all; /* 長い単語も折り返す */
 }
 
 /* ボタングループのコンテナ */
@@ -142,48 +153,96 @@ li .expand-icon.open {
   background-color: rgba(var(--primary-color), 0.15);
 }
 
+/* --- Template Preview --- */
+.template-preview {
+  background-color: var(--bg-color-offset);
+  border: 1px solid var(--border-color-light);
+  border-radius: var(--border-radius);
+  padding: 12px;
+  margin-top: 8px;
+  /* Add a subtle shadow for better separation */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.template-preview-header {
+  font-weight: 600; /* Slightly bolder */
+  color: var(--text-color-muted);
+  margin-bottom: 10px;
+  font-size: var(--font-size-sm);
+  text-transform: uppercase; /* Make it look more like a section title */
+  letter-spacing: 0.5px;
+}
+
+.template-preview-title {
+  font-weight: bold;
+  margin-bottom: 6px;
+  color: var(--text-color);
+}
+
+.template-preview-content {
+  white-space: pre-wrap; /* Ensure text wraps */
+  margin: 0;
+  padding: 8px;
+  background-color: var(--bg-color); /* Slightly different background for content block */
+  border: 1px solid var(--border-color-lighter);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-sm);
+  color: var(--text-color-secondary);
+}
+
 /* ===== タブUI用スタイル ===== */
 .tab-bar {
   display: flex;
   gap: 0;
   border-bottom: 1px solid var(--border-color);
-  background: var(--card-bg-color);
+  /* background: var(--card-bg-color); */ /* タブバー全体の背景は一旦なくすか、bodyと同じにする */
   margin-bottom: 12px;
   margin-top: 0;
 }
-.tab-btn {
-  flex: 1 1 0;
-  padding: 10px 0;
-  background: none;
-  border: none;
+.tab-bar .tab-btn {
+  padding: 10px 16px;
+  border: none; /* 左右と上のボーダーはなし */
+  border-bottom: 2px solid transparent; /* 下ボーダーはスペース確保のために残し、色は透明に */
+  background-color: transparent;
   color: var(--subtle-text-color);
-  font-size: 15px;
-  font-weight: 600;
   cursor: pointer;
-  outline: none;
-  border-bottom: 2px solid transparent;
-  transition: color var(--transition-speed), border-color var(--transition-speed), background var(--transition-speed);
+  transition: color 0.2s, background-color 0.2s, border-bottom-color 0.2s;
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  margin-bottom: -1px; /* 親要素のボーダーと重なるように */
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
+  position: relative; /* z-indexを効かせるためなど */
 }
+
+.tab-bar .tab-btn:hover {
+  color: var(--text-color);
+  background-color: rgba(var(--text-color-rgb, 24, 33, 45), 0.05); /* テキストカラーの薄い色をホバー時背景に */
+}
+
 .tab-btn.active {
   color: var(--primary-color);
-  border-bottom: 2px solid var(--primary-color);
-  background: var(--bg-color);
-  z-index: 1;
+  font-weight: 600; /* アクティブタブのフォントを少し太く */
+  border-bottom-color: var(--primary-color); /* アクティブタブの下線をプライマリカラーに */
+  background-color: var(--card-bg-color); /* アクティブタブの背景をカード背景色と同じにしてコンテンツと一体感を出す */
+  /* アクティブなタブが他のタブより手前に見えるように z-index を設定することも検討 */
+  /* box-shadow: 0 -2px 0 0 var(--card-bg-color) inset; */ /* 下線を内側に引いてタブとコンテンツのつながりを表現するテクニック */
 }
-.tab-btn:focus-visible {
-  outline: 2px solid var(--primary-color);
-  outline-offset: -2px;
-}
+
+/* タブコンテンツのスタイル */
 .tab-content {
   display: none;
+  padding-top: 12px; /* タブバーとの区切り */
 }
+
 .tab-content.active {
   display: block;
 }
 
 /* ===== 設定画面用スタイル ===== */
 #tab-settings {
-  padding: 18px 0 0 0;
+  padding: 18px 0 0 0; /* 上方向のパディングを少し多めに */
 }
 #tab-settings h2 {
   font-size: 1.05rem;
@@ -198,6 +257,7 @@ li .expand-icon.open {
   display: flex;
   flex-direction: column;
   gap: 22px;
+  margin-bottom: 16px; /* フォーム下のマージン */
 }
 .setting-group {
   display: flex;
@@ -207,23 +267,13 @@ li .expand-icon.open {
 }
 .setting-group label {
   color: var(--text-color);
-  font-size: 14px;
+  font-size: var(--font-size-sm); /* 設定ラベルは少し小さめに */
   font-weight: 500;
   margin-bottom: 2px;
 }
-#theme-select {
-  padding: 7px 10px;
-  border-radius: var(--border-radius);
-  border: 1px solid var(--border-color);
-  background: var(--card-bg-color);
-  color: var(--text-color);
-  font-size: 14px;
-  outline: none;
-  transition: border-color var(--transition-speed);
-}
-#theme-select:focus {
-  border-color: var(--primary-color);
-}
+
+/* #theme-select スタイルは削除し、_forms.css の汎用スタイルを参照させる */
+
 .lang-options {
   display: flex;
   gap: 18px;

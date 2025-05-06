@@ -4,15 +4,15 @@
   display: inline-flex; /* アイコンとテキストの整列のため */
   align-items: center;
   justify-content: center;
-  padding: 8px 12px; /* デフォルトのパディング */
+  padding: 8px 14px; /* パディング調整 */
   border: 1px solid transparent; /* 透明なボーダーを基本とする */
   border-radius: var(--border-radius);
-  font-size: 14px;
+  font-size: var(--font-size-base); /* 新しいフォントサイズ変数を使用 */
   font-weight: 500;
   text-align: center;
   text-decoration: none; /* aタグ利用時の下線除去 */
   cursor: pointer;
-  transition: all var(--transition-speed) ease;
+  transition: background-color var(--transition-speed), color var(--transition-speed), border-color var(--transition-speed); /* トランジションの調整 */
   position: relative; /* 波紋エフェクトやツールチップのため */
   overflow: hidden; /* 波紋エフェクトのため */
   white-space: nowrap; /* ボタン内テキストの折り返しを防ぐ */

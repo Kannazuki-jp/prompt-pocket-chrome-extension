@@ -19,31 +19,14 @@ export function renderPreview(li, template) {
   // ヘッダー要素を作成
   const headerEl = document.createElement('div');
   headerEl.classList.add('template-preview-header');
-  headerEl.textContent = 'Preview';
+  headerEl.textContent = template.title;
 
-  // 閉じるボタン
-  const closeButton = document.createElement('span');
-  closeButton.classList.add('template-preview-close');
-  closeButton.textContent = '×';
-  closeButton.addEventListener('click', e => {
-    e.stopPropagation();
-    panel.remove();
-  });
-  headerEl.appendChild(closeButton);
   panel.appendChild(headerEl);
-
-  // タイトル表示
-  const titleEl = document.createElement('div');
-  titleEl.textContent = template.title;
-  titleEl.style.fontWeight = 'bold';
-  titleEl.style.marginBottom = '8px';
-  panel.appendChild(titleEl);
 
   // プロンプト本体表示
   const promptEl = document.createElement('pre');
   promptEl.textContent = template.prompt;
-  promptEl.style.whiteSpace = 'pre-wrap';
-  promptEl.style.margin = '0';
+  promptEl.classList.add('template-preview-content');
   panel.appendChild(promptEl);
 
   // li直後にパネルを挿入

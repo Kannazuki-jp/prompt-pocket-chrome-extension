@@ -1,10 +1,15 @@
 :root {
   /* Modern Color Palette */
   --bg-color: #f9fafb;       /* Light Gray */
+  --bg-color-offset: var(--card-bg-color); /* プレビューパネルなど、基本背景より少しオフセットした背景色 */
   --card-bg-color: #ffffff;  /* White */
   --text-color: #1f2937;     /* Dark Gray */
   --subtle-text-color: #6b7280; /* Medium Gray */
+  --text-color-muted: var(--subtle-text-color); /* ヘッダーや補助情報など、控えめなテキスト色 */
+  --text-color-secondary: var(--subtle-text-color); /* 第二のテキスト色、詳細情報など */
   --border-color: #e5e7eb;    /* Light Gray Border */
+  --border-color-light: #f0f0f0; /* 通常のボーダーより明るいボーダー色 */
+  --border-color-lighter: #f7f7f7; /* さらに明るいボーダー色、ほぼ見えない区切りなど */
   --primary-color: #4f46e5;   /* Indigo */
   --primary-hover-color: #4338ca; /* Darker Indigo */
   --edit-color: #f59e0b;     /* Amber */
@@ -16,17 +21,33 @@
   --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1);
   --card-shadow-hover: 0 4px 6px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.1);
   --border-radius: 8px;
+  --border-radius-sm: 4px; /* 小さな角丸 */
   --transition-speed: 0.2s;
+
+  /* === Typography === */
+  --font-family-sans-serif: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-family-base: var(--font-family-sans-serif);
+  --font-size-base: 14px; /* 基本のフォントサイズ */
+  --font-size-sm: 0.875rem; /* 少し小さめ (12.25px) */
+  --font-size-lg: 1.125rem; /* 少し大きめ (15.75px) */
+
+  --line-height-base: 1.6;
+  --line-height-sm: 1.5; /* 小さめのフォントに対する行の高さ */
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     /* Dark Mode Color Palette - Professional Theme */
     --bg-color: #1a1a1a;       /* Background */
+    --bg-color-offset: var(--card-bg-color); /* プレビューパネルなど、基本背景より少しオフセットした背景色 */
     --card-bg-color: #2a2a2a;  /* Card Background */
     --text-color: #f1f5f9;     /* Text */
     --subtle-text-color: #94a3b8; /* Muted Text */
+    --text-color-muted: var(--subtle-text-color); /* ヘッダーや補助情報など、控えめなテキスト色 */
+    --text-color-secondary: var(--subtle-text-color); /* 第二のテキスト色、詳細情報など */
     --border-color: #3f3a3f;    /* Secondary (Used as Border) */
+    --border-color-light: #4a4a4a; /* 通常のボーダーより明るいボーダー色 */
+    --border-color-lighter: #555555; /* さらに明るいボーダー色、ほぼ見えない区切りなど */
     --primary-color: #3b82f6;   /* Primary */
     --primary-hover-color: #2563eb; /* Darker Primary for hover (Adjusted from original primary) */
     --edit-color: #facc15;     /* Lighter Amber (Kept from previous) */

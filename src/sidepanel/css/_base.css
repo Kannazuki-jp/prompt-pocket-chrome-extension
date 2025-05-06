@@ -1,18 +1,32 @@
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
   margin: 0;
-  padding: 16px;
+  padding: 8px; /* 全体パディングを 16px から 8px に縮小 */
   background-color: var(--bg-color);
   color: var(--text-color);
   min-width: 320px; /* Slightly wider */
 }
 
+#app {
+  padding: 0 8px 8px; /* 上パディングを0に、左右下は8px (元は全体8px) */
+  height: 100vh; /* ビューポートの高さいっぱいに広げる */
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto; /* コンテンツが多い場合にスクロール可能に */
+}
+
 h2 {
-  font-size: 1.1rem; /* Slightly smaller */
-  font-weight: 600;
+  font-size: var(--font-size-lg); /* 見出しは少し大きめに */
+  font-weight: 700; /* 少し太くして強調 */
   color: var(--text-color);
   margin-top: 0;
-  margin-bottom: 16px;
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 8px;
+  margin-bottom: 5px; /* h2と下のコンテンツの間のマージンを調整 */
+  /* border-bottom: 1px solid var(--border-color); */ /* 一時的にボーダーを削除 */
+  border-bottom: none; /* ボーダーを削除 */
+  padding-bottom: 0; /* ボーダーとの間隔を削除 */
+  line-height: 1.2; /* 行の高さを詰める */
 }
+
+/* --- アプリ全体のラッパー --- */

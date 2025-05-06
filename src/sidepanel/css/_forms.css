@@ -1,4 +1,54 @@
-/* Form Styles */
+/* === Form Styles === */
+
+/* 汎用的なフォームコントロールのスタイル */
+input[type="text"],
+textarea,
+select {
+  width: 100%;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  background-color: var(--card-bg-color);
+  color: var(--text-color);
+  font-size: var(--font-size-base); /* フォーム要素のフォントサイズ */
+  box-sizing: border-box;
+  transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+input[type="text"]:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(var(--primary-rgb, 88, 101, 242), 0.2); /* プライマリカラーの薄い影 */
+}
+
+textarea {
+  min-height: 80px;
+  resize: vertical; /* 縦方向のみリサイズ可能に */
+}
+
+select {
+  appearance: none; /* ブラウザデフォルトの矢印を消す */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23${encodeURIComponent(getComputedStyle(document.documentElement).getPropertyValue('--text-color').trim().substring(1))}'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 1em;
+  padding-right: 30px; /* 矢印のスペース確保 */
+}
+
+/* 特定のフォーム内の調整 (必要な場合) */
+#add-template-form textarea {
+  margin-top: 4px; /* #add-template-form 内のtextareaの微調整 */
+}
+
+#add-template-form button[type="submit"] {
+  /* 既存の .btn .btn--primary スタイルが適用される想定 */
+  width: 100%; /* 親要素いっぱいに広げる */
+  margin-top: 4px; /* 上の要素との間隔 */
+}
+
 #add-template-form {
   display: flex;
   flex-direction: column;
@@ -6,47 +56,9 @@
 }
 
 #add-template-form label {
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm); /* ラベルは少し小さめに */
   font-weight: 500;
   color: var(--subtle-text-color);
-}
-
-#add-template-form input[type="text"],
-#add-template-form textarea {
-  width: 100%;
-  padding: 8px 12px; /* Increased padding */
-  border: 1px solid var(--border-color);
-  border-radius: 6px; /* Slightly more rounded */
-  font-size: 0.9rem;
-  box-sizing: border-box;
-  background-color: var(--card-bg-color);
-  color: var(--text-color);
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-#add-template-form input[type="text"]:focus,
-#add-template-form textarea:focus {
-  outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 2px rgba(var(--primary-color), 0.2); /* Focus ring */
-}
-
-#add-template-form textarea {
-  min-height: 90px;
-  resize: vertical;
-}
-
-#add-template-form button[type="submit"] {
-  background-color: var(--primary-color);
-  color: var(--button-text-light);
-  padding: 10px 16px;
-  border: none;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  text-align: center;
 }
 
 #add-template-form button[type="submit"]:hover {
