@@ -70,9 +70,9 @@ export function createTemplateItem(template, index) {
   buttonContainer.classList.add('template-buttons');
   li.appendChild(buttonContainer);
 
-  // 挿入ボタン
+  // 挿入ボタン（プラスアイコンのみ）
   const templateButton = document.createElement('button');
-  templateButton.innerHTML = '<span>Insert</span>';
+  templateButton.innerHTML = `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="8" y="3" width="2" height="12" rx="1" fill="currentColor"/><rect x="3" y="8" width="12" height="2" rx="1" fill="currentColor"/></svg>`;
   templateButton.classList.add('btn', 'btn--primary', 'btn--insert');
   templateButton.title = 'Insert template';
   templateButton.addEventListener('click', async (e) => {
@@ -101,10 +101,10 @@ export function createTemplateItem(template, index) {
   });
   buttonContainer.appendChild(templateButton);
 
-  // 編集ボタン - 適切なアイコンで表現
+  // 編集ボタン（鉛筆アイコンのみ）
   const editButton = document.createElement('button');
-  editButton.innerHTML = '<span>Edit</span>';
-  editButton.classList.add('btn', 'btn--icon', 'btn--edit');
+  editButton.innerHTML = `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M13.13 2.87a2 2 0 0 1 2.83 2.83l-8.08 8.08a2 2 0 0 1-.71.44l-3.11 1.04a.5.5 0 0 1-.63-.63l1.04-3.11a2 2 0 0 1 .44-.71l8.08-8.08Zm1.41 1.42a1 1 0 0 0-1.41 0l-.71.7 1.41 1.42.71-.71a1 1 0 0 0 0-1.41ZM11.61 5.34 4 12.95V14h1.05l7.61-7.61-1.05-1.05Z" fill="currentColor"/></svg>`;
+  editButton.classList.add('btn', 'btn--edit');
   editButton.title = 'Edit';
   editButton.addEventListener('click', (event) => {
     event.stopPropagation();
@@ -112,10 +112,10 @@ export function createTemplateItem(template, index) {
   });
   buttonContainer.appendChild(editButton);
 
-  // 削除ボタン - ゴミ箱アイコンで直感性向上
+  // 削除ボタン（ゴミ箱アイコンのみ）
   const deleteButton = document.createElement('button');
-  deleteButton.innerHTML = '<span>Delete</span>';
-  deleteButton.classList.add('btn', 'btn--icon', 'btn--delete');
+  deleteButton.innerHTML = `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="5" y="7" width="8" height="8" rx="2" fill="currentColor"/><rect x="7" y="3" width="4" height="2" rx="1" fill="currentColor"/><rect x="3" y="5" width="12" height="2" rx="1" fill="currentColor"/></svg>`;
+  deleteButton.classList.add('btn', 'btn--delete');
   deleteButton.title = 'Delete';
   deleteButton.addEventListener('click', (event) => {
     event.stopPropagation();
