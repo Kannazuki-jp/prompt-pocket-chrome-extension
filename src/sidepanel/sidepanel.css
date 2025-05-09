@@ -1,5 +1,13 @@
-@import url("css/_variables.css");
-@import url("css/_base.css");
-@import url("css/_buttons.css");
-@import url("css/_forms.css");
-@import url("css/_components.css");
+/* ===== CSS Layer Imports =====
+   - 設計レイヤーごとに分割し、保守性・可読性を向上
+*/
+@import url("css/_variables.css");  /* 色・サイズ等の変数 */
+@import url("css/_base.css");       /* ベースリセット・共通要素 */
+@import url("css/_buttons.css");    /* ボタンスタイル */
+@import url("css/_forms.css");      /* フォーム/入力系 */
+@import url("css/_layout.css");     /* レイアウト・コンテナ */
+@import url("css/_tabs.css");       /* タブUI */
+@import url("css/_preview.css");    /* プレビュー表示 */
+@import url("css/_modal.css");      /* モーダル */
+@import url("css/_settings.css");   /* 設定画面 */
+@import url("css/_components.css"); /* 汎用コンポーネント */

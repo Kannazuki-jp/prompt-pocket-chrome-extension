@@ -1,0 +1,78 @@
+/* Layout Layer
+   - サイドパネル全体のレイアウトやコンテナの設定を定義
+   - 例: #template-list コンテナ、フォーム・設定レイアウトなど
+*/
+
+/* Template List Styles */
+#template-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px; /* フォームやhrとの区切り */
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* アイテム間のスペースを少し広げる */
+}
+
+#template-list li {
+  background-color: var(--card-bg-color);
+  border: 1px solid var(--border-color);
+  padding: 16px 18px;
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px; /* Gap between buttons */
+  box-shadow: var(--card-shadow);
+  transition: all var(--transition-speed) ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+#template-list li:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-1px);
+  border-color: rgba(var(--primary-color), 0.3);
+}
+
+/* 選択中のアイテム */
+#template-list li.selected {
+  background-color: rgba(var(--primary-color), 0.08);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 1px rgba(var(--primary-color), 0.2);
+}
+
+/* テンプレートタイトル表示領域 */
+#template-list li .template-title {
+  font-weight: 500; /* タイトルは少し太く */
+  color: var(--text-color);
+  margin-bottom: 4px;
+  font-size: var(--font-size-base);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+}
+
+/* テンプレートコンテンツ表示領域 */
+#template-list li .template-content {
+  font-size: var(--font-size-sm);
+  color: var(--subtle-text-color);
+  white-space: pre-wrap; /* 改行とスペースを保持 */
+  word-break: break-all; /* 長い単語も折り返す */
+}
+
+/* ボタングループのコンテナ */
+.template-buttons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto; /* 右寄せ */
+}
+
+/* Action Buttons Container (Optional, helps grouping) */
+.action-buttons {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0; /* Prevent buttons from shrinking */
+}
