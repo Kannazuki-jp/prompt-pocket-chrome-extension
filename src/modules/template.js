@@ -48,6 +48,8 @@ function extractVariables(promptText) {
  * @param {number} index
  * @returns {HTMLLIElement}
  */
+import { getEditingIndex } from './form.js';
+
 export function createTemplateItem(template, index) {
   const li = document.createElement('li');
   li.dataset.index = index;
@@ -119,8 +121,18 @@ export function createTemplateItem(template, index) {
   deleteButton.innerHTML = `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="5" y="7" width="8" height="8" rx="2" fill="currentColor"/><rect x="7" y="3" width="4" height="2" rx="1" fill="currentColor"/><rect x="3" y="5" width="12" height="2" rx="1" fill="currentColor"/></svg>`;
   deleteButton.classList.add('btn', 'btn--delete');
   deleteButton.title = 'Delete';
+  // 編集中のテンプレートは削除ボタンを無効化
+  if (typeof getEditingIndex === 'function' && getEditingIndex() === index) {
+    deleteButton.disabled = true;
+    deleteButton.classList.add('btn--disabled');
+  }
   deleteButton.addEventListener('click', (event) => {
     event.stopPropagation();
+    // 編集中は削除を禁止
+    if (typeof getEditingIndex === 'function' && getEditingIndex() === index) {
+      alert('編集中のテンプレートは削除できません。編集を完了してください。');
+      return;
+    }
     chrome.storage.local.get({ [STORAGE_KEY]: [] }, (result) => {
       const items = result[STORAGE_KEY];
       items.splice(index, 1);

@@ -134,3 +134,24 @@
 .btn--insert:hover::after {
   transform: translateX(2px);
 }
+
+/* Disabled state: 完全にクリック不可を示す */
+.btn--disabled {
+  opacity: 0.5;            /* 半透明にして無効感を出す */
+  cursor: not-allowed;     /* 禁止カーソルに変更 */
+  pointer-events: none;    /* クリックイベントを無効化 */
+}
+
+/* 無効時は波紋エフェクトを消す */
+.btn--disabled::before {
+  background-color: transparent !important;
+  transition: none !important;
+}
+
+/* 無効時のホバー効果を抑制 */
+.btn--disabled:hover {
+  background-color: inherit;
+  color: inherit;
+  border-color: inherit;
+  box-shadow: none;
+}

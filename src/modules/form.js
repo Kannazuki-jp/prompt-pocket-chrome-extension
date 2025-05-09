@@ -6,6 +6,14 @@ import { addTemplate, updateTemplate, fetchTemplates } from './template.js';
 let editingIndex = null;
 
 /**
+ * 現在編集中のテンプレートindexを返すgetter
+ * なぜ: 他モジュールから編集状態を参照し、UI制御（削除ボタン無効化等）に使うため
+ */
+export function getEditingIndex() {
+  return editingIndex;
+}
+
+/**
  * テンプレート追加・更新処理のイベントハンドラを登録
  * @param {HTMLFormElement} form
  * @param {HTMLInputElement} titleInput

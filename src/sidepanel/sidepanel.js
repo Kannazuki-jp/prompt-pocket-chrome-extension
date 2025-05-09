@@ -76,12 +76,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // 編集イベント
       templateListElement.addEventListener('edit-template', (e) => {
+        const idx = e.detail;
+        // 編集開始
         startEditing(
-          e.detail,
+          idx,
           titleInputElement,
           promptInputElement,
           submitButton
         );
+        // 全てのDeleteボタンを無効化
+        templateListElement.querySelectorAll('.btn--delete').forEach(btn => {
+          btn.disabled = true;
+          btn.classList.add('btn--disabled');
+        });
       });
 
       // テンプレート追加・更新
@@ -90,14 +97,38 @@ document.addEventListener('DOMContentLoaded', () => {
         titleInputElement,
         promptInputElement,
         submitButton,
+        // 再描画コールバック
         async () => { 
           cachedTemplates = await fetchTemplates();
           const frag2 = buildList(cachedTemplates);
           templateListElement.innerHTML = '';
           templateListElement.appendChild(frag2);
         },
-        () => resetForm(addFormElement, submitButton)
+        // フォームリセット後にDeleteボタンを再度有効化
+        () => {
+          resetForm(addFormElement, submitButton);
+          templateListElement.querySelectorAll('.btn--delete').forEach(btn => {
+            btn.disabled = false;
+            btn.classList.remove('btn--disabled');
+          });
+        }
       );
+
+      // テンプレート削除時も即時再描画
+      document.addEventListener('templates-updated', async () => {
+        cachedTemplates = await fetchTemplates();
+        const frag = buildList(cachedTemplates);
+        templateListElement.innerHTML = '';
+        templateListElement.appendChild(frag);
+        // プレビューが開いていれば閉じる
+        if (currentPreview) {
+          currentPreview.remove();
+          selectedItem?.classList.remove('selected');
+          selectedItem?.querySelector('.expand-icon')?.classList.remove('open');
+          currentPreview = null;
+          selectedItem = null;
+        }
+      });
     } catch (err) {
       // エラー時も notify を動的にインポートする（既にロードされている可能性もあるが念のため）
       try {
