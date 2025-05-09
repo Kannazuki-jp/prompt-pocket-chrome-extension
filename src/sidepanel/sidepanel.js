@@ -45,19 +45,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // プレビュー切替
       templateListElement.addEventListener('click', (e) => {
-        const li = e.target.closest('li');
-        if (!li || !e.target.classList.contains('expand-icon')) return;
+        // ボタン（insert/edit/delete）クリック時は無視
+        if (e.target.closest('.btn')) return;
+        // li要素を取得
+        const li = e.target.closest('li.template-item');
+        if (!li) return;
         const idx = Number(li.dataset.index);
-        // 既存プレビューを閉じる
+        // トグル動作
+        if (li === selectedItem) {
+          currentPreview?.remove();
+          li.classList.remove('selected');
+          li.querySelector('.expand-icon')?.classList.remove('open');
+          selectedItem = null;
+          currentPreview = null;
+          return;
+        }
+        // 他のプレビューが開いていれば閉じる
         if (currentPreview) {
           currentPreview.remove();
           selectedItem.classList.remove('selected');
           selectedItem.querySelector('.expand-icon')?.classList.remove('open');
         }
-        // 新規プレビュー
+        // 新規プレビューを開く
         renderPreview(li, cachedTemplates[idx]);
         li.classList.add('selected');
-        e.target.classList.add('open');
+        li.querySelector('.expand-icon')?.classList.add('open');
         currentPreview = li.nextElementSibling;
         selectedItem = li;
       });
