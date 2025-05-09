@@ -22,6 +22,7 @@ export default {
         { src: 'src/sidepanel/*.html', dest: 'dist' },
         { src: 'src/sidepanel/*.css', dest: 'dist' },
         { src: 'src/content-scripts/*.js', dest: 'dist' },
+        { src: 'src/sidepanel/css/*.css', dest: 'dist/css' },
         { src: 'manifest.json', dest: 'dist' }
       ],
       copyOnce: true

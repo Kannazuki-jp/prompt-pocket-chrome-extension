@@ -1,8 +1,4 @@
 import { initDOM } from '../modules/dom.js';
-import { fetchTemplates, buildList } from '../modules/template.js';
-import { renderPreview } from '../modules/preview.js';
-import { handleAdd, startEditing as formStartEditing, resetForm as formReset } from '../modules/form.js';
-import { notify } from '../modules/utils.js';
 import { setupTabs } from '../modules/tabs.js';
 
 // DOMのセレクタ定義
@@ -13,98 +9,96 @@ const SELECTORS = {
   promptInput: 'template-prompt'
 };
 
-// DOM要素を格納するオブジェクト
-let domElements;
-
-// 取得したテンプレートをキャッシュ
-let cachedTemplates = [];
-
-// 現在選択中のリストアイテムとプレビュー要素をトラッキング
-let selectedItem = null;
-let currentPreview = null;
-
-/**
- * テンプレート描画関数
- */
-async function renderTemplates() {
-  try {
-    const { templateListElement } = domElements;
-    const templates = await fetchTemplates();
-    // キャッシュを更新
-    cachedTemplates = templates;
-    const fragment = buildList(templates);
-    templateListElement.innerHTML = '';
-    templateListElement.appendChild(fragment);
-  } catch (error) {
-    notify('テンプレート読み込み中にエラーが発生しました。', 'error');
-  }
-}
-
-/**
- * 初期化処理
- */
+// 初期化処理: パネル表示時に必要なモジュールを動的に import
 document.addEventListener('DOMContentLoaded', () => {
-  // タブ切り替え初期化
   setupTabs();
-  try {
-    // DOM要素を取得
-    domElements = initDOM(SELECTORS);
-    // 展開アイコン (▶/▼) をクリックしてプレビューをトグル表示
-    domElements.templateListElement.addEventListener('click', (e) => {
-      const li = e.target.closest('li');
-      if (!li || !e.target.classList.contains('expand-icon')) return;
-      const icon = e.target;
-      const index = Number(li.dataset.index);
-      // 同じアイテムのトグル: 開いている場合は閉じる
-      if (currentPreview && selectedItem === li) {
-        currentPreview.remove();
-        li.classList.remove('selected');
-        icon.classList.remove('open');
-        currentPreview = null;
-        selectedItem = null;
-        return;
-      }
-      // 既存のプレビューを閉じる
-      if (currentPreview) {
-        currentPreview.remove();
-        selectedItem.classList.remove('selected');
-        const prevIcon = selectedItem.querySelector('.expand-icon');
-        if (prevIcon) prevIcon.classList.remove('open');
-      }
-      // 新規プレビューを表示
-      renderPreview(li, cachedTemplates[index]);
-      li.classList.add('selected');
-      icon.classList.add('open');
-      // トラッキング更新
-      currentPreview = li.nextElementSibling;
-      selectedItem = li;
-    });
-    // 編集イベントをリスンして処理
-    domElements.templateListElement.addEventListener('edit-template', (e) => {
-      const idx = e.detail;
-      formStartEditing(
-        idx,
-        domElements.titleInputElement,
-        domElements.promptInputElement,
-        domElements.submitButton
+  const dom = initDOM(SELECTORS);
+  let initialized = false;
+  let cachedTemplates = [];
+  let currentPreview = null;
+  let selectedItem = null;
+
+  // テンプレートタブクリックで遅延ロード
+  const templateTabBtn = document.querySelector('.tab-btn[data-tab="templates"]');
+  templateTabBtn.addEventListener('click', async () => {
+    if (initialized) return;
+    initialized = true;
+    try {
+      // 必要モジュールを並列ロード
+      const [tpl, prev, form, util] = await Promise.all([
+        import('../modules/template.js'),
+        import('../modules/preview.js'),
+        import('../modules/form.js'),
+        import('../modules/utils.js')
+      ]);
+      const { fetchTemplates, buildList } = tpl;
+      const { renderPreview } = prev;
+      const { handleAdd, startEditing, resetForm } = form;
+      const { notify } = util;
+      const { templateListElement, addFormElement, titleInputElement, promptInputElement, submitButton } = dom;
+
+      // テンプレート取得・描画
+      cachedTemplates = await fetchTemplates();
+      const fragment = buildList(cachedTemplates);
+      templateListElement.innerHTML = '';
+      templateListElement.appendChild(fragment);
+
+      // プレビュー切替
+      templateListElement.addEventListener('click', (e) => {
+        const li = e.target.closest('li');
+        if (!li || !e.target.classList.contains('expand-icon')) return;
+        const idx = Number(li.dataset.index);
+        // 既存プレビューを閉じる
+        if (currentPreview) {
+          currentPreview.remove();
+          selectedItem.classList.remove('selected');
+          selectedItem.querySelector('.expand-icon')?.classList.remove('open');
+        }
+        // 新規プレビュー
+        renderPreview(li, cachedTemplates[idx]);
+        li.classList.add('selected');
+        e.target.classList.add('open');
+        currentPreview = li.nextElementSibling;
+        selectedItem = li;
+      });
+
+      // 編集イベント
+      templateListElement.addEventListener('edit-template', (e) => {
+        startEditing(
+          e.detail,
+          titleInputElement,
+          promptInputElement,
+          submitButton
+        );
+      });
+
+      // テンプレート追加・更新
+      handleAdd(
+        addFormElement,
+        titleInputElement,
+        promptInputElement,
+        submitButton,
+        async () => { 
+          cachedTemplates = await fetchTemplates();
+          const frag2 = buildList(cachedTemplates);
+          templateListElement.innerHTML = '';
+          templateListElement.appendChild(frag2);
+        },
+        () => resetForm(addFormElement, submitButton)
       );
-    });
-    // テンプレート更新完了イベントで再描画
-    document.addEventListener('templates-updated', () => {
-      renderTemplates();
-    });
-    // フォームの追加・更新処理
-    handleAdd(
-      domElements.addFormElement,
-      domElements.titleInputElement,
-      domElements.promptInputElement,
-      domElements.submitButton,
-      renderTemplates,
-      () => formReset(domElements.addFormElement, domElements.submitButton)
-    );
-    // 初回テンプレート描画
-    renderTemplates();
-  } catch (error) {
-    notify(`初期化エラー: ${error.message}`, 'error');
+    } catch (err) {
+      // エラー時も notify を動的にインポートする（既にロードされている可能性もあるが念のため）
+      try {
+        const { notify } = await import('../modules/utils.js');
+        notify(`初期化エラー (template tab): ${err.message}`, 'error');
+      } catch (notifyErr) {
+        console.error('Failed to load notify module for error reporting:', notifyErr);
+        console.error('Original template tab initialization error:', err);
+      }
+    }
+  });
+  // 初期表示で既にアクティブなら自動ロード
+  if (templateTabBtn.classList.contains('active')) {
+    templateTabBtn.click();
   }
 });
