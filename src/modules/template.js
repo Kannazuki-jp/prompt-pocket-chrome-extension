@@ -1,5 +1,6 @@
 // template.js
 // テンプレート関連の機能をまとめたモジュール
+import showVariableModal from './variableModal.js';
 
 // テンプレート保存用のキー
 export const STORAGE_KEY = 'promptTemplates';
@@ -22,6 +23,22 @@ export async function fetchTemplates() {
       }
     });
   });
+}
+
+/**
+ * プロンプト文字列から変数名を抽出する関数
+ * なぜ: 変数のプレースホルダーを事前に解析し、挿入時の処理を高速化するため
+ * @param {string} promptText
+ * @returns {string[]}
+ */
+function extractVariables(promptText) {
+  const regex = /\{\{(.*?)\}\}/g;
+  const vars = [];
+  let match;
+  while ((match = regex.exec(promptText)) !== null) {
+    if (!vars.includes(match[1])) vars.push(match[1]);
+  }
+  return vars;
 }
 
 /**
@@ -58,14 +75,21 @@ export function createTemplateItem(template, index) {
   templateButton.innerHTML = '<span>Insert</span>';
   templateButton.classList.add('btn', 'btn--primary', 'btn--insert');
   templateButton.title = 'Insert template';
-  templateButton.addEventListener('click', (e) => {
+  templateButton.addEventListener('click', async (e) => {
     e.stopPropagation();
+    // 保存時に抽出済みの変数を使ってモーダル表示
+    let filledPrompt = template.prompt;
+    if (template.variables && template.variables.length > 0) {
+      const result = await showVariableModal(template.variables, template.prompt);
+      if (result === null) return; // キャンセル時は何もしない
+      filledPrompt = result;
+    }
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const activeTab = tabs[0];
       if (activeTab && activeTab.id) {
         chrome.tabs.sendMessage(
           activeTab.id,
-          { action: 'insertPrompt', prompt: template.prompt },
+          { action: 'insertPrompt', prompt: filledPrompt },
           (response) => {
             if (chrome.runtime.lastError) {
               console.warn('メッセージ送信失敗:', chrome.runtime.lastError.message);
@@ -163,7 +187,12 @@ export async function setTemplates(templates) {
  */
 export async function addTemplate(template) {
   const templates = await fetchTemplates();
-  templates.push(template);
+  const newTemplate = {
+    title: template.title,
+    prompt: template.prompt,
+    variables: extractVariables(template.prompt)
+  };
+  templates.push(newTemplate);
   await setTemplates(templates);
 }
 
@@ -175,7 +204,11 @@ export async function addTemplate(template) {
 export async function updateTemplate(index, template) {
   const templates = await fetchTemplates();
   if (index >= 0 && index < templates.length) {
-    templates[index] = template;
+    templates[index] = {
+      title: template.title,
+      prompt: template.prompt,
+      variables: extractVariables(template.prompt)
+    };
     await setTemplates(templates);
   } else {
     throw new Error('Invalid index for update: ' + index);
