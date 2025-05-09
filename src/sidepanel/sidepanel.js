@@ -38,6 +38,9 @@ function setupTabs() {
 // DOM要素を格納するオブジェクト
 let domElements;
 
+// 取得したテンプレートをキャッシュ
+let cachedTemplates = [];
+
 /**
  * テンプレート描画関数
  */
@@ -45,6 +48,8 @@ async function renderTemplates() {
   try {
     const { templateListElement } = domElements;
     const templates = await fetchTemplates();
+    // キャッシュを更新
+    cachedTemplates = templates;
     const fragment = buildList(templates);
     templateListElement.innerHTML = '';
     templateListElement.appendChild(fragment);
@@ -59,8 +64,6 @@ async function renderTemplates() {
 document.addEventListener('DOMContentLoaded', () => {
   // タブ切り替え初期化
   setupTabs();
-  // 他のモジュールからアクセスできるようグローバルに関数を公開
-  window.renderTemplates = renderTemplates;
   try {
     // DOM要素を取得
     domElements = initDOM(SELECTORS);
@@ -72,7 +75,8 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!e.target.classList.contains('expand-icon')) return;
       const icon = e.target;
       const index = Number(li.dataset.index);
-      const templates = await fetchTemplates();
+      // キャッシュから取得
+      const templates = cachedTemplates;
       // 既存プレビューがあるかチェック
       const next = li.nextElementSibling;
       const isOpen = next && next.classList.contains('template-preview');
@@ -90,14 +94,20 @@ document.addEventListener('DOMContentLoaded', () => {
         icon.classList.add('open');
       }
     });
-    // 編集処理をグローバルに設定
-    window.startEditing = (index) =>
+    // 編集イベントをリスンして処理
+    domElements.templateListElement.addEventListener('edit-template', (e) => {
+      const idx = e.detail;
       formStartEditing(
-        index,
+        idx,
         domElements.titleInputElement,
         domElements.promptInputElement,
         domElements.submitButton
       );
+    });
+    // テンプレート更新完了イベントで再描画
+    document.addEventListener('templates-updated', () => {
+      renderTemplates();
+    });
     // フォームの追加・更新処理
     handleAdd(
       domElements.addFormElement,

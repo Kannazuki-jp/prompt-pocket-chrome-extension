@@ -108,7 +108,9 @@ export function createTemplateItem(template, index) {
   editButton.title = 'Edit';
   editButton.addEventListener('click', (event) => {
     event.stopPropagation();
-    window.startEditing(index);
+    // 編集イベントを発行して sidepanel.js 側で処理
+    const editEvt = new CustomEvent('edit-template', { bubbles: true, detail: index });
+    li.dispatchEvent(editEvt);
   });
   buttonContainer.appendChild(editButton);
 
@@ -127,10 +129,8 @@ export function createTemplateItem(template, index) {
           console.error('テンプレート削除失敗:', chrome.runtime.lastError);
           alert('テンプレートの削除中にエラーが発生しました。');
         } else {
-          // グローバル経由でレンダリング関数を呼び出し
-          if (typeof window.renderTemplates === 'function') {
-            window.renderTemplates();
-          }
+          // 削除後に再描画用イベントを発行
+          document.dispatchEvent(new CustomEvent('templates-updated'));
         }
       });
     });
