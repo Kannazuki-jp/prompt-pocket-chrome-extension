@@ -9,7 +9,7 @@
     "https://gemini.google.com/*"
   ],
   "side_panel": {
-    "default_path": "src/sidepanel/sidepanel.html"
+    "default_path": "sidepanel.html"
   },
   "content_scripts": [
     {
@@ -17,7 +17,7 @@
         "https://chatgpt.com/*",
         "https://gemini.google.com/*"
       ],
-      "js": ["src/content-scripts/content.js"],
+      "js": ["content.js"],
       "run_at": "document_idle"
     }
   ],

@@ -1,0 +1,16 @@
+{
+  "name": "prompt-pocket-extension",
+  "version": "1.0.0",
+  "description": "Chrome extension for managing prompt templates",
+  "type": "module",
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "devDependencies": {
+    "rollup": "^3.20.0",
+    "@rollup/plugin-node-resolve": "^15.0.0",
+    "@rollup/plugin-commonjs": "^24.0.0",
+    "@rollup/plugin-terser": "^0.4.0",
+    "rollup-plugin-copy": "^3.4.0"
+  }
+}
