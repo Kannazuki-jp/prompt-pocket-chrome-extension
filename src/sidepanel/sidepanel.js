@@ -3,6 +3,7 @@ import { fetchTemplates, buildList } from '../modules/template.js';
 import { renderPreview } from '../modules/preview.js';
 import { handleAdd, startEditing as formStartEditing, resetForm as formReset } from '../modules/form.js';
 import { notify } from '../modules/utils.js';
+import { setupTabs } from '../modules/tabs.js';
 
 // DOMのセレクタ定義
 const SELECTORS = {
@@ -12,34 +13,15 @@ const SELECTORS = {
   promptInput: 'template-prompt'
 };
 
-// タブ切り替えロジック
-// なぜ: ユーザーが複数画面を直感的に切り替えられるようにするため
-function setupTabs() {
-  const tabBtns = document.querySelectorAll('.tab-btn');
-  const tabContents = document.querySelectorAll('.tab-content');
-  tabBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      // すべてのタブボタンのactiveクラスを外す
-      tabBtns.forEach(b => b.classList.remove('active'));
-      // クリックしたボタンにactiveクラスを付与
-      btn.classList.add('active');
-      // すべてのタブコンテンツを非表示
-      tabContents.forEach(tc => tc.classList.remove('active'));
-      // data-tab属性に対応するタブコンテンツのみ表示
-      const tabId = btn.getAttribute('data-tab');
-      const target = document.getElementById('tab-' + tabId);
-      if (target) {
-        target.classList.add('active');
-      }
-    });
-  });
-}
-
 // DOM要素を格納するオブジェクト
 let domElements;
 
 // 取得したテンプレートをキャッシュ
 let cachedTemplates = [];
+
+// 現在選択中のリストアイテムとプレビュー要素をトラッキング
+let selectedItem = null;
+let currentPreview = null;
 
 /**
  * テンプレート描画関数
@@ -68,31 +50,34 @@ document.addEventListener('DOMContentLoaded', () => {
     // DOM要素を取得
     domElements = initDOM(SELECTORS);
     // 展開アイコン (▶/▼) をクリックしてプレビューをトグル表示
-    domElements.templateListElement.addEventListener('click', async (e) => {
+    domElements.templateListElement.addEventListener('click', (e) => {
       const li = e.target.closest('li');
-      if (!li) return;
-      // アイコン以外のクリックは無視
-      if (!e.target.classList.contains('expand-icon')) return;
+      if (!li || !e.target.classList.contains('expand-icon')) return;
       const icon = e.target;
       const index = Number(li.dataset.index);
-      // キャッシュから取得
-      const templates = cachedTemplates;
-      // 既存プレビューがあるかチェック
-      const next = li.nextElementSibling;
-      const isOpen = next && next.classList.contains('template-preview');
-      // 他の開いているプレビューを閉じる
-      document.querySelectorAll('.template-preview').forEach(p => p.remove());
-      domElements.templateListElement.querySelectorAll('li').forEach(item => {
-        item.classList.remove('selected');
-        const exp = item.querySelector('.expand-icon');
-        if (exp) exp.classList.remove('open');
-      });
-      if (!isOpen) {
-        // プレビューを表示
-        renderPreview(li, templates[index]);
-        li.classList.add('selected');
-        icon.classList.add('open');
+      // 同じアイテムのトグル: 開いている場合は閉じる
+      if (currentPreview && selectedItem === li) {
+        currentPreview.remove();
+        li.classList.remove('selected');
+        icon.classList.remove('open');
+        currentPreview = null;
+        selectedItem = null;
+        return;
       }
+      // 既存のプレビューを閉じる
+      if (currentPreview) {
+        currentPreview.remove();
+        selectedItem.classList.remove('selected');
+        const prevIcon = selectedItem.querySelector('.expand-icon');
+        if (prevIcon) prevIcon.classList.remove('open');
+      }
+      // 新規プレビューを表示
+      renderPreview(li, cachedTemplates[index]);
+      li.classList.add('selected');
+      icon.classList.add('open');
+      // トラッキング更新
+      currentPreview = li.nextElementSibling;
+      selectedItem = li;
     });
     // 編集イベントをリスンして処理
     domElements.templateListElement.addEventListener('edit-template', (e) => {

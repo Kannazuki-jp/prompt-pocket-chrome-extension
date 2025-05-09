@@ -20,7 +20,7 @@ export default function showVariableModal(variableNames, promptText) {
     // ヘッダー
     const header = document.createElement('div');
     header.classList.add('modal-header');
-    header.textContent = '変数を入力してください';
+    header.textContent = 'Input variables';
     modal.appendChild(header);
     // ボディ: 変数ごとの入力フィールド生成
     const body = document.createElement('div');
@@ -44,10 +44,10 @@ export default function showVariableModal(variableNames, promptText) {
     footer.classList.add('modal-footer');
     const insertBtn = document.createElement('button');
     insertBtn.classList.add('btn', 'btn--primary');
-    insertBtn.textContent = '挿入';
+    insertBtn.textContent = 'Insert';
     const cancelBtn = document.createElement('button');
     cancelBtn.classList.add('btn', 'btn--text');
-    cancelBtn.textContent = 'キャンセル';
+    cancelBtn.textContent = 'Cancel';
     footer.appendChild(insertBtn);
     footer.appendChild(cancelBtn);
     modal.appendChild(footer);

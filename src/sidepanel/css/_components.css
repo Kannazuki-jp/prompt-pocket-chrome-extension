@@ -17,7 +17,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px; /* Gap between buttons */
-  box-shadow: var(--card-shadow); 
+  box-shadow: var(--card-shadow);
   transition: all var(--transition-speed) ease;
   cursor: pointer;
   position: relative;

@@ -125,7 +125,7 @@
 }
 
 .btn--insert::after {
-  content: '→'; /* FontAwesomeなどのアイコンフォント利用も検討 */
+  content: ' '; /* FontAwesomeなどのアイコンフォント利用も検討 */
   font-size: inherit; /* ボタンのフォントサイズに合わせる */
   margin-left: 6px; /* テキストとアイコンの間隔 */
   transition: transform 0.2s ease;
