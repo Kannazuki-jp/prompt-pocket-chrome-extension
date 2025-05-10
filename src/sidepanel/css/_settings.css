@@ -18,7 +18,7 @@
   display: flex;
   flex-direction: column;
   gap: 22px;
-  margin-bottom: 16px; /* フォーム下のマージン */
+  margin-bottom: 10px; /* フォーム下のマージン */
 }
 .setting-group {
   display: flex;

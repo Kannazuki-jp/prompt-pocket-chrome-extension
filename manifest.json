@@ -3,7 +3,7 @@
   "name": "Prompt Pocket",
   "version": "1.0.0",
   "description": "Save and manage prompt templates in a sidebar panel, and insert them into ChatGPT or Gemini with a single click.",
-  "permissions": ["storage", "sidePanel", "scripting", "activeTab", "tabs"],
+  "permissions": ["storage", "sidePanel", "tabs"],
   "host_permissions": [
     "https://chatgpt.com/*",
     "https://gemini.google.com/*"
