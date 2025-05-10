@@ -10,25 +10,63 @@
   <div id="app">
     <div class="tab-bar">
       <button class="tab-btn active" data-tab="templates">Templates</button>
+      <button class="tab-btn" data-tab="import">Import</button>
       <button class="tab-btn" data-tab="settings">Settings</button>
     </div>
 
     <div id="tab-templates" class="tab-content active">
-      <form id="add-template-form">
-  <div class="md-field">
-    <label for="template-title">Title</label>
-    <input type="text" id="template-title" required />
-  </div>
-  <div class="md-field">
-    <label for="template-prompt">Prompt Content</label>
-    <textarea id="template-prompt" required></textarea>
-  </div>
-  <button type="submit" class="btn btn--primary">Save</button>
-</form>
+      <section class="template-editor card">
+        <h3 class="template-section-title">Add/Edit Template</h3>
+        <form id="add-template-form">
+          <div class="md-field">
+            <label for="template-title">Title</label>
+            <input type="text" id="template-title" placeholder="Enter template title" required />
+          </div>
+          <div class="md-field">
+            <label for="template-prompt">Prompt Content</label>
+            <textarea id="template-prompt" placeholder="Enter Markdown text" rows="6" required></textarea>
+          </div>
+          <button type="submit" class="btn btn--primary">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 8.5l3.5 3.5 6.5-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Save
+          </button>
+        </form>
+      </section>
       <hr />
       <div id="template-list"></div>
     </div>
 
+    <div id="tab-import" class="tab-content">
+      <section class="template-import card">
+        <h3 class="template-section-title">Import Markdown Template</h3>
+        <div class="import-section">
+          <div class="file-input-wrapper">
+            <input type="file" id="import-md-file" accept=".md" />
+            <label for="import-md-file" class="file-label">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 3v9M5 7l4-4 4 4M3 12v2a1 1 0 001 1h10a1 1 0 001-1v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Select File</span>
+            </label>
+            <span class="file-name" id="selected-file-name">No file selected</span>
+          </div>
+          <button type="button" id="import-md-btn" class="btn btn--primary">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 12V4M8 4L5 7M8 4l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M3 12h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            Import
+          </button>
+        </div>
+      </section>
+      <p class="import-description">
+        Import Markdown files (.md) as templates.<br>
+        The file name will be used as the template title.
+      </p>
+    </div>
+    
     <div id="tab-settings" class="tab-content">
       <h2>Settings</h2>
       <form id="settings-form">

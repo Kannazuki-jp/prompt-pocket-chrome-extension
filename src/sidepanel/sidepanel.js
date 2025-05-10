@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
         import('../modules/form.js'),
         import('../modules/utils.js')
       ]);
-      const { fetchTemplates, buildList } = tpl;
+      const { fetchTemplates, buildList, addTemplate } = tpl;
       const { renderPreview } = prev;
       const { handleAdd, startEditing, resetForm } = form;
       const { notify } = util;
@@ -89,6 +89,60 @@ document.addEventListener('DOMContentLoaded', () => {
           btn.disabled = true;
           btn.classList.add('btn--disabled');
         });
+      });
+
+      // MDファイルインポート処理
+      const importInput = document.getElementById('import-md-file');
+      const importBtn = document.getElementById('import-md-btn');
+      const fileNameDisplay = document.getElementById('selected-file-name');
+      
+      // ファイル選択時の表示更新
+      importInput.addEventListener('change', () => {
+        const file = importInput.files[0];
+        if (file) {
+          fileNameDisplay.textContent = file.name;
+          // 選択済みの場合はスタイル変更
+          fileNameDisplay.classList.add('file-selected');
+        } else {
+          fileNameDisplay.textContent = '選択されていません';
+          fileNameDisplay.classList.remove('file-selected');
+        }
+      });
+      
+      importBtn.addEventListener('click', () => {
+        const file = importInput.files[0];
+        if (!file) {
+          notify('ファイルを選択してください', 'error');
+          return;
+        }
+        
+        // ローディング表示
+        importBtn.disabled = true;
+        importBtn.innerHTML = '<svg class="spinner" viewBox="0 0 50 50"><circle cx="25" cy="25" r="20"></circle></svg> 処理中...';
+        
+        const reader = new FileReader();
+        reader.onload = async () => {
+          const markdownText = reader.result;
+          const title = file.name.replace(/\.md$/i, '');
+          try {
+            await addTemplate({ title, prompt: markdownText });
+            notify('インポート完了', 'success');
+            document.dispatchEvent(new CustomEvent('templates-updated'));
+            
+            // フォームリセット
+            importInput.value = '';
+            fileNameDisplay.textContent = '選択されていません';
+            fileNameDisplay.classList.remove('file-selected');
+          } catch (e) {
+            console.error('MDインポート失敗:', e);
+            notify('インポート失敗', 'error');
+          } finally {
+            // ボタン状態を元に戻す
+            importBtn.disabled = false;
+            importBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 12V4M8 4L5 7M8 4l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 12h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> インポート';
+          }
+        };
+        reader.readAsText(file);
       });
 
       // テンプレート追加・更新

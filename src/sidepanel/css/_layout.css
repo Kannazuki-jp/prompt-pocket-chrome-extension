@@ -76,3 +76,181 @@
   gap: 6px;
   flex-shrink: 0; /* Prevent buttons from shrinking */
 }
+
+/* ===== Template Editor & Import Sections ===== */
+.template-import,
+.template-editor {
+  margin-bottom: 16px; /* セクション間の間隔 */
+}
+
+.import-description {
+  margin-top: 16px;
+  padding: 12px;
+  background-color: rgba(var(--primary-color), 0.05);
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+  color: var(--text-color-secondary);
+  border-left: 3px solid rgba(var(--primary-color), 0.5);
+}
+
+/* カードスタイル */
+.card {
+  background-color: var(--card-bg-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--card-shadow);
+  padding: 16px;
+  border: 1px solid var(--border-color);
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: var(--card-shadow-hover);
+}
+
+.template-section-title {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text-color);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 6px;
+}
+
+.import-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+/* ファイル入力のカスタムスタイル */
+.file-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  position: relative;
+}
+
+.file-input-wrapper input[type="file"] {
+  position: absolute;
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.file-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: var(--font-size-sm);
+  margin-bottom: 4px;
+}
+
+.file-label:hover {
+  background-color: var(--bg-color-hover);
+  border-color: var(--border-color-hover);
+}
+
+.file-label svg {
+  color: var(--primary-color);
+}
+
+.file-name {
+  font-size: var(--font-size-sm);
+  color: var(--text-color-muted);
+  margin-left: 4px;
+}
+
+.file-selected {
+  color: var(--primary-color);
+  font-weight: 500;
+}
+
+/* ローディングスピナー */
+.spinner {
+  animation: rotate 1.5s linear infinite;
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+}
+
+.spinner circle {
+  stroke: currentColor;
+  stroke-width: 4;
+  stroke-linecap: round;
+  fill: none;
+  stroke-dasharray: 90, 150;
+  stroke-dashoffset: 0;
+  animation: dash 1.5s ease-in-out infinite;
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
+}
+
+#add-template-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.md-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.md-field label {
+  font-weight: 500;
+  color: var(--text-color);
+  font-size: var(--font-size-sm);
+}
+
+.md-field input,
+.md-field textarea {
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  background-color: var(--bg-color);
+  transition: all 0.2s ease;
+  font-size: var(--font-size-base);
+}
+
+.md-field input:focus,
+.md-field textarea:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(var(--primary-color), 0.2);
+  outline: none;
+}
+
+.md-field textarea {
+  min-height: 120px;
+  resize: vertical;
+  line-height: 1.5;
+}
